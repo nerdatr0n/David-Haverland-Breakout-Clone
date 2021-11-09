@@ -11,6 +11,9 @@ public class PlayerBall : NetworkBehaviour
 	//private Rigidbody rigidbody;
 
 	private Vector3 velocity;
+
+
+
 	private void OnCollisionEnter(Collision other)
 	{
 		// Has died

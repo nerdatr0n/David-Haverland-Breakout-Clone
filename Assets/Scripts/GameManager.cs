@@ -14,7 +14,7 @@ public class GameManager : NetworkManager
 	[Header("Game Manager Things")]
 	[SerializeField] private TextMeshProUGUI scoreText;
 
-
+	[SyncVar]
 	private static int score = 0;
 
 	[SerializeField] private PlayerBall playerBall;

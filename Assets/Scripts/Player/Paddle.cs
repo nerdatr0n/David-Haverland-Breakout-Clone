@@ -13,6 +13,7 @@ public class Paddle : NetworkBehaviour
 
 	[SerializeField] private Transform ballStartTransform;
 	public Transform GetBallStartTransform() => ballStartTransform;
+	[SerializeField] private GameObject ball;
 
 	private int lives;
 
@@ -38,7 +39,10 @@ public class Paddle : NetworkBehaviour
 
 		if (Input.GetButtonDown("Jump"))
 		{
-			GameManager.GetGameManager.PlayerBall.FireBall();
+			ball = Instantiate(GameManager.GetGameManager.spawnPrefabs.Find(prefab => prefab.name == "Ball"));
+			NetworkServer.Spawn(ball);
+
+			ball.GetComponent<PlayerBall>().FireBall();
 		}
 	}
 }
