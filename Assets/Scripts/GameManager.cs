@@ -1,16 +1,29 @@
+using Mirror;
 using TMPro;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkManager
 {
+	[SerializeField] private Transform topSpawn;
+	[SerializeField] private Transform bottomSpawn;
+
 	// for singleton
 	private static GameManager gameManager;
+	public static GameManager GetGameManager => gameManager;
 
+	[Header("Game Manager Things")]
 	[SerializeField] private TextMeshProUGUI scoreText;
+
 
 	private static int score = 0;
 
-    private void Awake()
+	[SerializeField] private PlayerBall playerBall;
+	public PlayerBall PlayerBall => playerBall;
+
+	private static Paddle playerOne;
+	public Paddle PlayerOne => playerOne;
+
+	private void Awake()
     {
 	    // sets the singleton
 	    if (gameManager == null)
@@ -22,6 +35,7 @@ public class GameManager : MonoBehaviour
 		    Debug.LogError("There are two game managers and there shouldn't be");
 	    }
     }
+
 
     private void Update()
     {
@@ -44,4 +58,16 @@ public class GameManager : MonoBehaviour
 	    score += scoreToAdd;
     }
 
+    public static bool SetPlayerOne(Paddle paddle)
+    {
+	    if (playerOne)
+	    {
+		    return false;
+	    }
+	    playerOne = paddle;
+	    GetGameManager.playerBall.ResetBall(paddle);
+
+
+	    return true;
+    }
 }

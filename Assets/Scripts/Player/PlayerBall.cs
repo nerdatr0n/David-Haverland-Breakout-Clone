@@ -1,15 +1,14 @@
+using Mirror;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-public class PlayerBall : MonoBehaviour
+public class PlayerBall : NetworkBehaviour
 {
 	private bool isOnPaddle = true;
 
 	[SerializeField] private float speed = 10;
 	//private Rigidbody rigidbody;
-
-	[SerializeField] private Paddle paddle;
 
 	private Vector3 velocity;
 	private void OnCollisionEnter(Collision other)
@@ -17,7 +16,7 @@ public class PlayerBall : MonoBehaviour
 		// Has died
 		if (other.gameObject.CompareTag("KillPlayer"))
 		{
-			ResetBall(paddle);
+			ResetBall(GameManager.GetGameManager.PlayerOne);
 			return;
 		}
 
@@ -38,7 +37,7 @@ public class PlayerBall : MonoBehaviour
 	private void Awake()
 	{
 		//rigidbody = GetComponent<Rigidbody>();
-		ResetBall(paddle);
+		//ResetBall(paddle);
 	}
 
 	public void FireBall()
@@ -48,7 +47,9 @@ public class PlayerBall : MonoBehaviour
 			return;
 		}
 
-		transform.parent = null;
+
+
+		transform.position = GameManager.GetGameManager.PlayerOne.GetBallStartTransform().position;
 
 		isOnPaddle = false;
 
@@ -60,15 +61,16 @@ public class PlayerBall : MonoBehaviour
 
 	public void ResetBall(Paddle paddle)
 	{
-		transform.parent = paddle.GetBallStartTransform();
-		transform.localPosition = Vector3.zero;
+		//transform.parent = paddle.GetBallStartTransform();
+		//transform.localPosition = Vector3.zero;
 
 		isOnPaddle = true;
 
 		velocity = Vector3.zero;
+		transform.position = Vector3.zero;
 	}
 
-
+	[ServerCallback]
 	private void Update()
 	{
 		transform.position += velocity.normalized * speed * Time.deltaTime;
