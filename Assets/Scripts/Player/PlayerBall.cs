@@ -5,8 +5,6 @@ using Random = UnityEngine.Random;
 
 public class PlayerBall : NetworkBehaviour
 {
-	private bool isOnPaddle = true;
-
 	[SerializeField] private float speed = 10;
 	//private Rigidbody rigidbody;
 
@@ -43,18 +41,11 @@ public class PlayerBall : NetworkBehaviour
 		//ResetBall(paddle);
 	}
 
-	public void FireBall()
+
+	public void FireBall(Vector3 spawnPosition)
 	{
-		if (!isOnPaddle)
-		{
-			return;
-		}
+		transform.position = spawnPosition;
 
-
-
-		transform.position = GameManager.GetGameManager.PlayerOne.GetBallStartTransform().position;
-
-		isOnPaddle = false;
 
 		Vector3 launchDirection = new Vector3(Random.Range(-1f, 1f), 1, 0);
 
@@ -67,10 +58,7 @@ public class PlayerBall : NetworkBehaviour
 		//transform.parent = paddle.GetBallStartTransform();
 		//transform.localPosition = Vector3.zero;
 
-		isOnPaddle = true;
-
-		velocity = Vector3.zero;
-		transform.position = Vector3.zero;
+		Destroy(gameObject);
 	}
 
 	[ServerCallback]

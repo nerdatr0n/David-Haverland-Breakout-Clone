@@ -14,8 +14,7 @@ public class GameManager : NetworkManager
 	[Header("Game Manager Things")]
 	[SerializeField] private TextMeshProUGUI scoreText;
 
-	[SyncVar]
-	private static int score = 0;
+
 
 	[SerializeField] private PlayerBall playerBall;
 	public PlayerBall PlayerBall => playerBall;
@@ -44,18 +43,21 @@ public class GameManager : NetworkManager
 
     private void UpdateScoreText()
     {
-	    scoreText.text = score.ToString();
+	    scoreText.text = ScoreManager.Instance.score.ToString();
     }
+
+
+
 
 
     public static void ResetScore()
     {
-	    score = 0;
+	    ScoreManager.Instance.score = 0;
     }
 
     public static void AddScore(int scoreToAdd)
     {
-	    score += scoreToAdd;
+	    ScoreManager.Instance.score += scoreToAdd;
     }
 
     public static bool SetPlayerOne(Paddle paddle)

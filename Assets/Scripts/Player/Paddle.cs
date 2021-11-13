@@ -15,6 +15,8 @@ public class Paddle : NetworkBehaviour
 	public Transform GetBallStartTransform() => ballStartTransform;
 	[SerializeField] private GameObject ball;
 
+	private GameObject myBall;
+
 	private int lives;
 
 	private void Awake()
@@ -37,12 +39,21 @@ public class Paddle : NetworkBehaviour
 
 		transform.position = position;
 
-		if (Input.GetButtonDown("Jump"))
+		if (Input.GetButtonDown("Jump") && ball == null)
 		{
-			ball = Instantiate(GameManager.GetGameManager.spawnPrefabs.Find(prefab => prefab.name == "Ball"));
-			NetworkServer.Spawn(ball);
-
-			ball.GetComponent<PlayerBall>().FireBall();
+			SpawnBall(ballStartTransform.position);
 		}
 	}
+
+	[Command]
+	public void SpawnBall(Vector3 spawnPosition)
+	{
+		GameObject newBall = Instantiate(GameManager.GetGameManager.spawnPrefabs.Find(prefab => prefab.name == "Ball"), spawnPosition, Quaternion.identity);
+		NetworkServer.Spawn(newBall);
+
+		newBall.GetComponent<PlayerBall>().FireBall(spawnPosition);
+
+		ball = newBall;
+	}
+
 }
